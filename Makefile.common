@@ -1,6 +1,6 @@
 # name of executable
 
-ELF=$(notdir $(CURDIR)).elf                    
+ELF=$(notdir $(CURDIR)).elf
 BIN=$(notdir $(CURDIR)).bin
 
 # Tool path
@@ -26,6 +26,7 @@ OC=$(TOOLROOT)/arm-none-eabi-objcopy
 DEVICE=$(LIBROOT)/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x
 CORE=$(LIBROOT)/Libraries/CMSIS/CM3/CoreSupport
 PERIPH=$(LIBROOT)/Libraries/STM32F10x_StdPeriph_Driver
+EVAL=$(LIBROOT)/Utilities/STM32_EVAL
 
 # Search path for standard files
 
@@ -45,21 +46,21 @@ vpath %.c $(TEMPLATEROOT)/Library
 
 #  Processor specific
 
-PTYPE = STM32F10X_MD_VL 
+PTYPE = STM32F10X_MD_VL
 LDSCRIPT = $(TEMPLATEROOT)/stm32f100.ld
-STARTUP= startup_stm32f10x.o system_stm32f10x.o 
+STARTUP= startup_stm32f10x.o system_stm32f10x.o
 
 # Compilation Flags
 
-FULLASSERT = -DUSE_FULL_ASSERT 
+FULLASSERT = -DUSE_FULL_ASSERT
 
-LDFLAGS+= -T$(LDSCRIPT) -mthumb -mcpu=cortex-m3 
-CFLAGS+= -mcpu=cortex-m3 -mthumb 
+LDFLAGS+= -T$(LDSCRIPT) -mthumb -mcpu=cortex-m3
+CFLAGS+= -mcpu=cortex-m3 -mthumb -std=c99
 CFLAGS+= -I$(TEMPLATEROOT) -I$(DEVICE) -I$(CORE) -I$(PERIPH)/inc -I.
 CFLAGS+= -D$(PTYPE) -DUSE_STDPERIPH_DRIVER $(FULLASSERT)
 CFLAGS+= -I$(TEMPLATEROOT)/Library/ff9/src -I$(TEMPLATEROOT)/Library
 
-# Build executable 
+# Build executable
 
 $(ELF) : $(OBJS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
